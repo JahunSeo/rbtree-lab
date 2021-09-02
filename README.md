@@ -1,3 +1,6 @@
+# 과제 제출용
+- 화이팅!
+
 # Red-Black Tree 구현
 
 Balanced search tree로 많이 쓰이는 Red-black tree (이하 RB tree)를 C 언어로 구현해 보는 과제입니다.
