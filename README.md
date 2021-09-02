@@ -1,6 +1,6 @@
 # 과제 제출용
 - 화이팅!
-- docker 쉽지 않다!
+- docker 쉽지 않다!!!!!
 
 # Red-Black Tree 구현
 
