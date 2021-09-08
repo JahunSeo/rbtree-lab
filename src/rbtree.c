@@ -1,6 +1,8 @@
 #include "rbtree.h"
 
-#include <malloc.h>
+// #include <malloc.h>
+#include <stdio.h>
+#include <stdlib.h>
 
 /* 
  * 추가 함수 입출력값 정의
@@ -28,6 +30,9 @@ node_t *rbtree_successor(rbtree *t, node_t *x);
 // rbtree_delete_fixup:
 void rbtree_delete_fixup(rbtree *t, node_t *x);
 
+// delete_node: node에 할당된 메모리 반환하기
+void delete_node(node_t *);
+
 
 // 전역 변수로 NIL 초기화 //
 node_t _NIL = {
@@ -47,6 +52,7 @@ node_t *NIL = &_NIL;
 //     node_t* nodes[10];
 //     int values[10] = {5, 12, 10, 14, 20, 83, 65, 1, 99, 78};
 //     int delete_result;
+//     node_t* found;
 
 //     // 트리 생성
 //     rbtree *t = new_rbtree();
@@ -55,13 +61,14 @@ node_t *NIL = &_NIL;
 //     rbtree_inorder_walk(t->root);
 //     printf("\n\n");
 
-//     for (int i=0; i<10; i++) {
+//     for (int i=0; i<5; i++) {
 //         nodes[i] = rbtree_insert(t, values[i]);
 //         printf("rbtree : ");
 //         rbtree_inorder_walk(t->root);
 //         printf("\n");
 //     }
-//     for (int i=0; i<10; i++) {
+
+//     for (int i=0; i<5; i++) {
 //         delete_result = rbtree_erase(t, nodes[i]);
 //         printf("rbtree : ");
 //         rbtree_inorder_walk(t->root);    
@@ -75,17 +82,74 @@ node_t *NIL = &_NIL;
  * rbtree 함수 구현하기 
  */
 rbtree *new_rbtree(void) {
-    rbtree *t = (rbtree *)malloc(sizeof(rbtree));
+    rbtree *t = (rbtree *)calloc(1, sizeof(rbtree));
     return t;
 }
 
+void delete_node(node_t *x) {
+  if (x == NULL) {
+    return;
+  }
+  delete_node(x->left);
+  delete_node(x->right);
+  free(x);
+}
 
 void delete_rbtree(rbtree *t) {
-    // TODO: 모든 노드의 메모리 반환하기
-
+    // 재귀적으로 모든 노드의 메모리 반환하기
+    delete_node(t->root);
     // 트리의 메모리 반환하기
     free(t);
 }
+
+node_t *rbtree_find(const rbtree *t, const key_t key) {
+  // 리턴할 노드를 루트로 초기화
+  node_t *node = t->root;
+  // 조건에 맞는 노드를 찾을 때까지 반복
+  while (node != NULL && key != node->key) {
+    if (key < node->key) {
+      node = node->left;
+    } else {
+      node = node->right;
+    }
+  }
+  return node;
+}
+
+
+node_t *rbtree_min(const rbtree *t) {
+  node_t *node = t->root;
+  // 빈 트리인 경우, 루트 리턴
+  if (node == NULL) {
+    return t->root;
+  }
+  // 빈 트리가 아닌 경우, 왼쪽 자식을 계속 따라 내려감
+  while (node->left != NULL) {
+    node = node->left;
+  }
+  return node;
+}
+
+
+node_t *rbtree_max(const rbtree *t) {
+  node_t *node = t->root;
+  // 빈 트리인 경우, 루트 리턴
+  if (node == NULL) {
+    return t->root;
+  }
+  // 빈 트리가 이닌 경우, 오른쪽 자식을 계속 따라 내려감
+  while (node->right != NULL) {
+    node = node->right;
+  }
+  return node;
+}
+
+
+int rbtree_to_array(const rbtree *t, key_t *key, const size_t size) {
+  // TODO:
+  return 0;
+}
+
 
 
 void rbtree_inorder_walk(const node_t *x) {
@@ -544,20 +608,21 @@ int rbtree_erase(rbtree *t, node_t *z) {
     // - 가령 CASE 1에서 z의 부모와 NIL이 연결되었다면, 
     //   z의 부모가 NIL을 가리키는 간선을 NULL로 변경해 주어야 함
     // - (주의!) NIL의 parent가 없을 수 있으므로 체크
-    if (NIL->parent != NULL) {
-        // NIL 부모 관점
-        // - NIL이 루트가 된 경우
-        if (t->root == NIL) {
-            t->root = NULL;
-        // - NIL이 왼쪽 자식인 경우
-        } else if (NIL->parent->left == NIL) {
+    // 루트가 NIL이 된 경우
+    if (t->root == NIL) {
+      t->root = NULL;
+    // NIL이 자식으로 설정된 노드가 있는 경우
+    } else if (NIL->parent != NULL) {
+      // NIL 부모 관점
+      // - NIL이 왼쪽 자식
+      if (NIL->parent->left == NIL) {
             NIL->parent->left = NULL;
-        // - NIL이 오른쪽 자식인 경우
-        } else if (NIL->parent->right == NIL) {
-            NIL->parent->right = NULL;
-        }
-        // NIL 관점
-        NIL->parent = NULL;
+      // - NIL이 오른쪽 자식
+      } else {
+          NIL->parent->right = NULL;
+      }
+      // NIL 관점
+      NIL->parent = NULL;
     }
 
     return 1;

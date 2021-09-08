@@ -30,7 +30,6 @@ void test_insert_single(const key_t key) {
 void test_find_single(const key_t key, const key_t wrong_key) {
   rbtree *t = new_rbtree();
   node_t *p = rbtree_insert(t, key);
-
   node_t *q = rbtree_find(t, key);
   assert(q != NULL);
   assert(q->key == key);
@@ -237,12 +236,19 @@ void test_minmax_suite() {
 }
 
 int main(void) {
+  printf("start 'test_init()'!\n");
   test_init();
-  test_insert_single(1024);
+  printf("start 'test_insert_single(1024)'!\n");
+  test_insert_single(2048);
+  printf("start 'test_find_single(512, 1024)'!\n");
   test_find_single(512, 1024);
+  printf("start 'test_erase_root(128)'!\n");
   test_erase_root(128);
+  printf("start 'test_minmax_suite()'!\n");
   test_minmax_suite();
+  printf("start 'test_distinct_values()'!\n");
   test_distinct_values();
+  printf("start 'test_duplicate_values()'!\n");
   test_duplicate_values();
   printf("Passed all tests!\n");
 }
