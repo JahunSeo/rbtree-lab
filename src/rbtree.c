@@ -144,6 +144,51 @@ node_t *rbtree_max(const rbtree *t) {
   return node;
 }
 
+
+int rbtree_to_array(const rbtree *t, key_t *arr, const size_t size) {
+    printf("[rbtree_to_array] start!\n");
+    // arr의 아이템 인덱스 초기화
+    int index = 0;
+    // 깊이 우선 탐색을 위해 각 노드의 주소값을 저장하는 스택 생성 (최대 크기 size)
+    node_t *stack[size];
+    // 스택의 첫 번째 아이템으로 루트 추가
+    int stack_top = -1;
+    node_t *curr = t->root;
+    // 스택에 아이템이 남아 있거나 curr가 남아 있는 경우 탐색 지속
+    // - 스택에 아이템이 남았다는 것은, 조상 노드가 남았다는 것
+    // - curr가 남았다는 것은, 아직 더 깊이 들어갈 수 있다는 것
+    while (stack_top >= 0 || curr != NULL) {
+        // 가운데 노드가 남아 있는 경우
+        // - 현재 서브 루트를 스택에 추가한 뒤,
+        // - 아직 탐색되지 않은 왼쪽 자식을 서브 루트로 설정
+        if (curr != NULL) {
+            // 현재 서브 루트를 스택에 추가
+            stack_top++;
+            stack[stack_top] = curr;
+            // 왼쪽 자식을 새로운 서브 루트로 설정
+            curr = curr->left;
+        // 가운데 노드가 처리된 경우
+        // - 스택에서 가장 상단의 서브 루트를 뽑아 처리한 뒤, 
+        // - 그 노드의 오른쪽 자식를 서브 루트로 설정
+        } else {
+            // 스택에서 가장 상단의 서브 루트 가져옴
+            curr = stack[stack_top];
+            stack_top--;
+            // 서르 루트의 값 출력 (혹은 배열에 추가)
+            // printf("[value] %d \n", curr->key);
+            arr[index] = curr->key;
+            index++;
+            if (index >= size) {
+                break;
+            }
+            // 그 오른쪽 자식을 서브 루트로 설정
+            curr = curr->right;
+        }
+    }
+    return 0;
+}
+
+
 void inorder_walk_with_count(const node_t *x, key_t *arr, int *count, const size_t size) {
     if (x!= NULL) {
         inorder_walk_with_count(x->left, arr, count, size);
@@ -159,13 +204,12 @@ void inorder_walk_with_count(const node_t *x, key_t *arr, int *count, const size
 
 // 두 번째 인자는 배열을 가리키는 포인터를 의미!
 // https://stackoverflow.com/questions/11656532/returning-an-array-using-c
-int rbtree_to_array(const rbtree *t, key_t *arr, const size_t size) {
+int rbtree_to_array_recursive(const rbtree *t, key_t *arr, const size_t size) {
   printf("[rbtree_to_array] start!\n");
   int count = 0;
   inorder_walk_with_count(t->root, arr, &count, size);
   return 0;
 }
-
 
 
 void rbtree_inorder_walk(const node_t *x) {

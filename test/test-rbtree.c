@@ -85,9 +85,11 @@ void test_minmax(key_t *arr, const size_t n) {
   // // DEBUGGING // //
   int result[n];
   rbtree_to_array(t, result, n);
+  printf("results: ");
   for (int i=0; i<n; i++) {
-      printf("result[%d] == %d\n", i, result[i]);
+      printf(" %d ", result[i]);
   }
+  printf("\n");
   // // // // // // // 
   assert(t->root != NULL);
 
