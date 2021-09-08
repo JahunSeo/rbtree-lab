@@ -82,6 +82,13 @@ void test_minmax(key_t *arr, const size_t n) {
   assert(t != NULL);
 
   insert_arr(t, arr, n);
+  // // DEBUGGING // //
+  int result[n];
+  rbtree_to_array(t, result, n);
+  for (int i=0; i<n; i++) {
+      printf("result[%d] == %d\n", i, result[i]);
+  }
+  // // // // // // // 
   assert(t->root != NULL);
 
   qsort((void *)arr, n, sizeof(key_t), comp);
@@ -236,19 +243,19 @@ void test_minmax_suite() {
 }
 
 int main(void) {
-  printf("start 'test_init()'!\n");
-  test_init();
-  printf("start 'test_insert_single(1024)'!\n");
-  test_insert_single(2048);
-  printf("start 'test_find_single(512, 1024)'!\n");
-  test_find_single(512, 1024);
-  printf("start 'test_erase_root(128)'!\n");
-  test_erase_root(128);
+  // printf("start 'test_init()'!\n");
+  // test_init();
+  // printf("start 'test_insert_single(1024)'!\n");
+  // test_insert_single(2048);
+  // printf("start 'test_find_single(512, 1024)'!\n");
+  // test_find_single(512, 1024);
+  // printf("start 'test_erase_root(128)'!\n");
+  // test_erase_root(128);
   printf("start 'test_minmax_suite()'!\n");
   test_minmax_suite();
-  printf("start 'test_distinct_values()'!\n");
-  test_distinct_values();
-  printf("start 'test_duplicate_values()'!\n");
-  test_duplicate_values();
-  printf("Passed all tests!\n");
+  // printf("start 'test_distinct_values()'!\n");
+  // test_distinct_values();
+  // printf("start 'test_duplicate_values()'!\n");
+  // test_duplicate_values();
+  // printf("Passed all tests!\n");
 }

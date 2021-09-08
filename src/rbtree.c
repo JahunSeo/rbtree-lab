@@ -144,9 +144,25 @@ node_t *rbtree_max(const rbtree *t) {
   return node;
 }
 
+void inorder_walk_with_count(const node_t *x, key_t *arr, int *count, const size_t size) {
+    if (x!= NULL) {
+        inorder_walk_with_count(x->left, arr, count, size);
+        if (*count < size) {
+            arr[*count] = x->key;
+            // printf(" %d ", arr[*count]);
+            (*count)++;
+        }
+        inorder_walk_with_count(x->right, arr, count, size);
+    }
+}
 
-int rbtree_to_array(const rbtree *t, key_t *key, const size_t size) {
-  // TODO:
+
+// 두 번째 인자는 배열을 가리키는 포인터를 의미!
+// https://stackoverflow.com/questions/11656532/returning-an-array-using-c
+int rbtree_to_array(const rbtree *t, key_t *arr, const size_t size) {
+  printf("[rbtree_to_array] start!\n");
+  int count = 0;
+  inorder_walk_with_count(t->root, arr, &count, size);
   return 0;
 }
 
