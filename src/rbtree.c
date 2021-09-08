@@ -332,7 +332,7 @@ node_t *rbtree_insert(rbtree *t, const key_t key) {
     new_n->left = new_n->right = NULL;
     new_n->color = RBTREE_RED;
     // 2. 트리에서 들어갈 장소 찾기
-    // - 새로운 노드와 그 부모 노드 초기회
+    // - 새로운 노드와 그 부모 노드 초기화
     node_t *parent_n = NULL;
     node_t *child_n = t->root;
     // - 리프 노드에 도달할 때까지 이동 
